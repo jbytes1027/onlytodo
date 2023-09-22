@@ -1,39 +1,47 @@
+using Microsoft.EntityFrameworkCore;
+using OnlyTodo.Data;
 using TodoTask = OnlyTodo.Models.Task;
 
 namespace OnlyTodo.Services;
 
 public class TaskService
 {
-    List<TodoTask> tasks = new();
+    private readonly OnlyTodoContext _context;
 
-    public Task<List<TodoTask>> GetAllAsync() {
-        foreach (var task in tasks) Console.WriteLine(task);
-        return Task.FromResult(tasks);
+    public TaskService(OnlyTodoContext context)
+    {
+        _context = context;
+    }
+
+    public Task<List<TodoTask>> GetAllAsync()
+    {
+        return _context.Tasks.ToListAsync();
     }
 
     public Task<TodoTask?> FindAsync(Guid id)
     {
-        foreach (var task in tasks)
-        {
-            if (task.Id == id)
-            {
-                return Task.FromResult<TodoTask?>(task);
-            }
-        }
-        return Task.FromResult<TodoTask?>(null);
+        var query = from task in _context.Tasks where task.Id == id select task;
+        return Task.FromResult<TodoTask?>(query.First());
     }
 
     public Task AddAsync(TodoTask task)
     {
-        tasks.Add(task);
+        _context.Add(task);
+        _context.SaveChanges();
         return Task.CompletedTask;
     }
 
-    public async Task<TodoTask?> RemoveAsync(Guid id)
+    public Task<TodoTask?> RemoveAsync(Guid id)
     {
-        var task = await FindAsync(id);
-        if (task is not null) tasks.Remove(task);
-        return task;
+        TodoTask task = (
+            from t in _context.Tasks
+            where t.Id == id
+            select t
+        ).First();
+
+        _context.Remove(task);
+        _context.SaveChanges();
+        return Task.FromResult<TodoTask?>(task);
     }
 
     // public async Task<TodoTask?> UpdateAsync(TodoTask task)

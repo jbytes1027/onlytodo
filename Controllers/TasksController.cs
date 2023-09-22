@@ -8,18 +8,23 @@ namespace OnlyTodo.Controllers;
 [Route("[controller]")]
 public class TasksController : ControllerBase
 {
-    TaskService taskService = new();
+    TaskService _taskService;
+
+    public TasksController(TaskService taskService)
+    {
+        _taskService = taskService;
+    }
 
     [HttpGet]
     public async Task<ActionResult<List<TodoTask>>> GetAll() {
-        return await taskService.GetAllAsync();
+        return await _taskService.GetAllAsync();
     }
 
     [HttpGet]
     [Route("{id}")]
     public async Task<ActionResult<TodoTask>> Get(Guid id)
     {
-        var task = await taskService.FindAsync(id);
+        var task = await _taskService.FindAsync(id);
         if (task is null)
             return NotFound();
 
@@ -29,7 +34,7 @@ public class TasksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TodoTask>> Create(TodoTask task)
     {
-        await taskService.AddAsync(task);
+        await _taskService.AddAsync(task);
         return CreatedAtAction(nameof(Create), task);
     }
 
@@ -37,7 +42,7 @@ public class TasksController : ControllerBase
     [Route("{id}")]
     public async Task<ActionResult<TodoTask>> Remove(Guid id)
     {
-        var task = await taskService.RemoveAsync(id);
+        var task = await _taskService.RemoveAsync(id);
         if (task is null)
             return NotFound();
 
