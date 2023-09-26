@@ -21,7 +21,8 @@ public class TaskService
     public Task<TodoTask?> FindAsync(Guid id)
     {
         var query = from task in _context.Tasks where task.Id == id select task;
-        return Task.FromResult<TodoTask?>(query.First());
+        query.DefaultIfEmpty(null);
+        return query.FirstOrDefaultAsync();
     }
 
     public Task AddAsync(TodoTask task)
