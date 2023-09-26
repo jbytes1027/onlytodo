@@ -34,15 +34,17 @@ public class TaskService
 
     public Task<TodoTask?> RemoveAsync(Guid id)
     {
-        TodoTask task = (
-            from t in _context.Tasks
-            where t.Id == id
-            select t
-        ).First();
+        var query = from t in _context.Tasks where t.Id == id select t;
+        query.DefaultIfEmpty(null);
+        TodoTask? task = query.FirstOrDefault();
 
-        _context.Remove(task);
-        _context.SaveChanges();
-        return Task.FromResult<TodoTask?>(task);
+        if (task is not null)
+        {
+            _context.Remove(task);
+            _context.SaveChanges();
+        }
+
+        return Task.FromResult(task);
     }
 
     // public async Task<TodoTask?> UpdateAsync(TodoTask task)
