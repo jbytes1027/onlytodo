@@ -131,8 +131,24 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async void Delete_WithInvalidId_SucceedsWithNoContent()
+    public async void Delete_WithValidId_ReturnsNoContentAndRemoveObject()
     {
-        // check if resource is gone
+        TodoTask task = await AddSampleTodo();
+
+        var deleteResponse = await _client.DeleteAsync($"tasks/{task.Id}");
+        var getResponse = await _client.GetAsync($"tasks/{task.Id}");
+
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
+    }
+
+    [Fact]
+    public async void Delete_WithInvalidId_Fails()
+    {
+        string id = Guid.NewGuid().ToString();
+
+        var response = await _client.DeleteAsync($"tasks/{id}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 }
