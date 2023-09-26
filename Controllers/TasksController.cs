@@ -16,7 +16,8 @@ public class TasksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<TodoTask>>> GetAll() {
+    public async Task<ActionResult<List<TodoTask>>> GetAll()
+    {
         return await _taskService.GetAllAsync();
     }
 
