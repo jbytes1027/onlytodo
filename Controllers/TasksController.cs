@@ -35,8 +35,16 @@ public class TasksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TodoTask>> Create(TodoTask task)
     {
+        var tasks = await _taskService.GetAllAsync();
+        foreach (var existingTask in tasks)
+        {
+            if (existingTask.Id == task.Id)
+            {
+                return Conflict("Error: Post already exists.");
+            }
+        }
         await _taskService.AddAsync(task);
-        return CreatedAtAction(nameof(Create), task);
+        return Created($"/tasks/{task.Id}", task);
     }
 
     [HttpDelete]
