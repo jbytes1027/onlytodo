@@ -27,6 +27,7 @@ public class TaskService
 
     public Task AddAsync(TodoTask task)
     {
+        task.Id = Guid.NewGuid();
         _context.Add(task);
         _context.SaveChanges();
         return Task.CompletedTask;

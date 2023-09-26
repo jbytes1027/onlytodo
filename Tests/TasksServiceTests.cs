@@ -44,11 +44,18 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
 
     private async Task<TodoTask> AddSampleTodo()
     {
-        TodoTask task = new(Guid.NewGuid(), "Task Title", false);
+        TodoTask task = new()
+        {
+            Title = "Task Title",
+            Completed = false,
+        };
 
-        await _client.PostAsJsonAsync("tasks", task);
+        var postResponse = await _client.PostAsJsonAsync("tasks", task);
+        var createdTask = await postResponse.Content.ReadFromJsonAsync<TodoTask>();
 
-        return task;
+        if (createdTask is null) throw new Exception("Error creating sample task.");
+
+        return createdTask;
     }
 
     [Fact]
@@ -64,7 +71,11 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async void Post_WithValidData_SucceedsAndReturnsValidResponse()
     {
-        TodoTask task = new(Guid.NewGuid(), "Task Title", false);
+        TodoTask task = new()
+        {
+            Title = "Task Title",
+            Completed = false,
+        };
 
         // Act
         var response = await _client.PostAsJsonAsync("tasks", task);
@@ -95,16 +106,19 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async void Post_Duplicate_ReturnsFailure()
+    public async void Post_WithId_IgnoresId()
     {
-        TodoTask task = new(Guid.NewGuid(), "Task Title", false);
+        TodoTask task = new()
+        {
+            Id = Guid.NewGuid(),
+            Title = "Task Title",
+            Completed = false,
+        };
 
-        // Act
-        await _client.PostAsJsonAsync("tasks", task);
-        var response = await _client.PostAsJsonAsync("tasks", task);
+        var postResponse = await _client.PostAsJsonAsync("tasks", task);
+        var createdTask = await postResponse.Content.ReadFromJsonAsync<TodoTask>();
 
-        //Assert
-        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.NotEqual(task.Id, createdTask?.Id);
     }
 
     [Fact]
