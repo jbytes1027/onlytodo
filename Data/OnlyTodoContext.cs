@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlyTodo.Models;
 using TodoTask = OnlyTodo.Models.Task;
 
 namespace OnlyTodo.Data;
@@ -14,14 +15,14 @@ public partial class OnlyTodoContext : DbContext
     {
     }
 
-    public virtual DbSet<TodoTask> Tasks { get; set; }
+    public virtual DbSet<TaskSchema> Tasks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=localhost; Database=only_todo_dev; Username=dev; Password=dev");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TodoTask>(entity =>
+        modelBuilder.Entity<TaskSchema>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("tasks_pkey");
 
