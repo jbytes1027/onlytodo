@@ -43,9 +43,8 @@ public class TaskService
 
     public Task<TaskSchema?> UpdateAsync(TodoTask taskUpdates)
     {
-        var entity = _context.Tasks
-            .DefaultIfEmpty(null)
-            .FirstOrDefault(t => t != null && t.Id == taskUpdates.Id);
+        _context.Tasks.DefaultIfEmpty(null);
+        var entity = _context.Tasks.FirstOrDefault(t => t != null && t.Id == taskUpdates.Id);
 
         if (entity is not null)
         {
@@ -54,7 +53,7 @@ public class TaskService
             if (taskUpdates.Completed is not null)
                 entity.Completed = (bool)taskUpdates.Completed;
 
-            _context.Update(taskUpdates);
+            _context.Update(entity);
             _context.SaveChanges();
         }
 

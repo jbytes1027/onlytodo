@@ -6,6 +6,8 @@ using TodoTask = OnlyTodo.Models.Task;
 using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
+using OnlyTodo.Models;
+using Npgsql.Internal.TypeHandlers.FullTextSearchHandlers;
 
 namespace OnlyTodo.Tests;
 
@@ -42,7 +44,7 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
         return JObject.Parse(await getResponseJsonString(response)).HasValues;
     }
 
-    private async Task<TodoTask> AddSampleTodo()
+    private async Task<TaskSchema> AddSampleTodo()
     {
         TodoTask task = new()
         {
@@ -51,7 +53,7 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
         };
 
         var postResponse = await _client.PostAsJsonAsync("tasks", task);
-        var createdTask = await postResponse.Content.ReadFromJsonAsync<TodoTask>();
+        var createdTask = await postResponse.Content.ReadFromJsonAsync<TaskSchema>();
 
         if (createdTask is null) throw new Exception("Error creating sample task.");
 
@@ -134,7 +136,7 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async void Get_WithValidId_ReturnsValidResponseWithData()
     {
-        TodoTask task = await AddSampleTodo();
+        var task = await AddSampleTodo();
 
         // Act
         var response = await _client.GetAsync($"tasks/{task.Id}");
@@ -147,7 +149,7 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async void Delete_WithValidId_ReturnsNoContentAndRemoveObject()
     {
-        TodoTask task = await AddSampleTodo();
+        var task = await AddSampleTodo();
 
         var deleteResponse = await _client.DeleteAsync($"tasks/{task.Id}");
         var getResponse = await _client.GetAsync($"tasks/{task.Id}");
@@ -164,5 +166,32 @@ public class TaskServiceTests : IClassFixture<WebApplicationFactory<Program>>
         var response = await _client.DeleteAsync($"tasks/{id}");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async void Patch_WithInvalidId_Fails()
+    {
+        string id = Guid.NewGuid().ToString();
+
+        var response = await _client.PatchAsJsonAsync($"tasks/{id}", new object());
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async void Patch_WithValidInput_ReturnsSuccessWithData()
+    {
+        var task = await AddSampleTodo();
+        TodoTask updateTask = new()
+        {
+            Id = task.Id,
+            Title = "New Title",
+        };
+
+        var response = await _client.PatchAsJsonAsync($"tasks/{task.Id}", task);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(updateTask.Title, JObject.Parse(await getResponseJsonString(response)).GetValue("title"));
     }
 }
