@@ -52,8 +52,10 @@ const TodoItem = (props) => {
 
   async function tryUpdateTodo() {
     try {
-      await taskService.update(props.id, newTitle)
-      props.onChange()
+      if (newTitle !== props.title) {
+        await taskService.update(props.id, newTitle)
+        props.onChange()
+      }
     } catch (err) {
       console.log(err)
     }
