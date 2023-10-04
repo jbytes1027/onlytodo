@@ -42,8 +42,8 @@ const TodoList = () => {
 const TodoItem = (props) => {
   return (
     <div className="todo-list-item">
-      <div className="checkbox" onClick={props.onDelete} />
       <div className="title">{props.title}</div>
+      <div className="button-delete" onClick={props.onDelete}>&#x00d7;</div>
     </div>
   )
 }
