@@ -16,6 +16,9 @@ const TodoList = () => {
     updateList()
   }, [])
 
+  // auto update every 3 seconds
+  setInterval(updateList, 3000)
+
   return (
     <div className="todo-list">
       {list.map((e) => (
