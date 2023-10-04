@@ -69,6 +69,7 @@ const TodoItem = (props) => {
           onChange={(e) => setNewTitle(e.target.value)}
           onKeyDown={onKeyDown}
           onBlur={tryUpdateTodo}
+          autoFocus
         />
       </div>
     )
