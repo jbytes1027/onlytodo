@@ -9,7 +9,7 @@ namespace OnlyTodo.Controllers;
 [Route("[controller]")]
 public class TasksController : ControllerBase
 {
-    TaskService _taskService;
+    readonly TaskService _taskService;
 
     public TasksController(TaskService taskService)
     {
