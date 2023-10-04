@@ -14,10 +14,12 @@ const TodoList = () => {
 
   useEffect(() => {
     updateList()
+
+    // auto update every 3 seconds
+    const interval = setInterval(updateList, 3000)
+    return () => clearInterval(interval)
   }, [])
 
-  // auto update every 3 seconds
-  setInterval(updateList, 3000)
 
   return (
     <div className="todo-list">
