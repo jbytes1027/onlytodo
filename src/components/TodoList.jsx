@@ -12,15 +12,6 @@ const TodoList = () => {
       .catch((err) => console.log(err))
   }
 
-  async function onDeleteTodo(id) {
-    try {
-      await taskService.remove(id)
-      updateList()
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   useEffect(() => {
     updateList()
   }, [])
@@ -28,11 +19,7 @@ const TodoList = () => {
   return (
     <div className="todo-list">
       {list.map((e) => (
-        <TodoItem
-          title={e.title}
-          key={e.id}
-          onDelete={() => onDeleteTodo(e.id)}
-        />
+        <TodoItem key={e.id} title={e.title} id={e.id} onChange={updateList} />
       ))}
       <AddTodoItem onSubmit={updateList} />
     </div>
@@ -40,12 +27,63 @@ const TodoList = () => {
 }
 
 const TodoItem = (props) => {
-  return (
-    <div className="todo-list-item">
-      <div className="title">{props.title}</div>
-      <div className="button-delete" onClick={props.onDelete}>&#x00d7;</div>
-    </div>
-  )
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [newTitle, setNewTitle] = useState("")
+
+  function onKeyDown(event) {
+    if (event.key === "Enter") {
+      tryUpdateTodo()
+    }
+  }
+
+  async function onDeleteTodo() {
+    try {
+      await taskService.remove(props.id)
+      props.onChange()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  function useEditMode() {
+    setNewTitle(props.title)
+    setIsEditMode(true)
+  }
+
+  async function tryUpdateTodo() {
+    try {
+      await taskService.update(props.id, newTitle)
+      props.onChange()
+    } catch (err) {
+      console.log(err)
+    }
+
+    setIsEditMode(false)
+  }
+  if (isEditMode)
+    return (
+      <div className="todo-list-item">
+        <input
+          type="text"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          onKeyDown={onKeyDown}
+          onBlur={tryUpdateTodo}
+        />
+      </div>
+    )
+  else
+    return (
+      <div className="todo-list-item">
+        <div className="title">{props.title}</div>
+        <div className="button-edit" onClick={useEditMode}>
+          &#x270e;
+        </div>
+        <div className="button-delete" onClick={onDeleteTodo}>
+          &#x00d7;
+        </div>
+      </div>
+    )
 }
 
 export default TodoList

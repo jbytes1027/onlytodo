@@ -13,9 +13,14 @@ async function post(title) {
   return response.data
 }
 
+async function update(id, title) {
+  const response = await axios.patch(`${baseUrl}/${id}`, { title })
+  return response.data
+}
+
 async function remove(id) {
   await axios.delete(`${baseUrl}/${id}`)
 }
 
-const taskService = { post, getAll, remove }
+const taskService = { post, update, getAll, remove }
 export default taskService

@@ -25,10 +25,12 @@ body {
   outline: solid var(--outline-thickness) var(--bg-color);
 }
 
+.todo-list-item .button-edit,
 .todo-list-item .button-delete {
   margin: 0.05em 0.2em;
   font-size: x-large;
   cursor: pointer;
+  user-select: none;
 }
 
 .todo-list-item .checkbox {
@@ -44,6 +46,10 @@ body {
   margin-right: auto;
   margin: auto auto auto 0;
   padding: 0.3em;
+}
+
+.todo-list-item [type="text"] {
+  outline: none;
 }
 
 .add-todo {
