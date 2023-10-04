@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using OnlyTodo.Data;
 using OnlyTodo.Services;
 
@@ -11,7 +12,14 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 }));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<OnlyTodoContext>();
+
+
+DotNetEnv.Env.TraversePath().Load();
+builder.Configuration.AddEnvironmentVariables();
+
+string? connectionString = builder.Configuration["CONNECTION_STRING"];
+if (connectionString is null) throw new Exception("No Connection String Found");
+builder.Services.AddDbContext<OnlyTodoContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddScoped<TaskService>();
 
 var app = builder.Build();
