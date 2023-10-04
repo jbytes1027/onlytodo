@@ -5,7 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 {
-    policy.AllowAnyOrigin(); policy.AllowAnyHeader();
+    policy.AllowAnyOrigin();
+    policy.AllowAnyHeader();
+    policy.AllowAnyMethod();
 }));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
