@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dotnet-todo-backend.csproj" />
+    <ProjectReference Include="..\onlytodo-server.csproj" />
   </ItemGroup>
 
 </Project>
