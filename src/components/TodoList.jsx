@@ -1,26 +1,51 @@
-const TodoList = () => {
-    const list = [
-        { id: "1a", title: "task 1", completed: false },
-        { id: "2a", title: "task 2", completed: false },
-        { id: "3a", title: "task 3", completed: true },
-    ];
+import { useEffect, useState } from "react"
+import taskService from "../services/TaskService"
+import AddTodoItem from "./AddTodoItem"
 
-    return (
-        <div className="todo-list">
-            {list.map((e) => (
-                <TodoItem title={e.title} />
-            ))}
-        </div>
-    );
-};
+const TodoList = () => {
+  const [list, setList] = useState([])
+
+  function updateList() {
+    taskService
+      .getAll()
+      .then((res) => setList(res))
+      .catch((err) => console.log(err))
+  }
+
+  async function onDeleteTodo(id) {
+    try {
+      await taskService.remove(id)
+      updateList()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    updateList()
+  }, [])
+
+  return (
+    <div className="todo-list">
+      {list.map((e) => (
+        <TodoItem
+          title={e.title}
+          key={e.id}
+          onDelete={() => onDeleteTodo(e.id)}
+        />
+      ))}
+      <AddTodoItem onSubmit={updateList} />
+    </div>
+  )
+}
 
 const TodoItem = (props) => {
-    return (
-        <div className="todo-list-item">
-            <div className="checkbox" />
-            <div className="title">{props.title}</div>
-        </div>
-    );
-};
+  return (
+    <div className="todo-list-item">
+      <div className="checkbox" onClick={props.onDelete} />
+      <div className="title">{props.title}</div>
+    </div>
+  )
+}
 
-export default TodoList;
+export default TodoList
