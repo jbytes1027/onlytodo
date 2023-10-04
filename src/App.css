@@ -1,38 +1,73 @@
-.App {
-  text-align: center;
+:root {
+    --bg-color: black;
+    --fg-2nd-color: #c7c7c7;
+    --fg-color: white;
+    --outline-thickness: 2px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 1.2em;
+    color: var(--bg-color);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.todo-list {
+    display: flex;
+    flex-direction: column;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.todo-list-item {
+    margin: 0.3em 0;
+    padding: 0.1em;
+    display: flex;
+    flex-direction: row;
+    outline: solid var(--outline-thickness) var(--bg-color);
 }
 
-.App-link {
-  color: #61dafb;
+.todo-list-item .checkbox {
+    margin: 0.3em;
+    width: 1em;
+    height: 1em;
+    outline: solid var(--outline-thickness) var(--bg-color);
+    outline-offset: calc(-1 * var(--outline-thickness));
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.todo-list-item .title {
+    margin: auto 0;
+}
+
+.add-todo {
+    display: flex;
+    margin: 0.3em 0;
+}
+
+[type="button"],
+[type="text"] {
+    border: 0px;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+
+    padding: 0.2em;
+    background-color: var(--fg-color);
+    outline: solid var(--outline-thickness) var(--bg-color);
+    color: var(--bg-color);
+}
+
+[type="text"] {
+    width: 100%;
+}
+
+[type="button"] {
+    margin-left: 0.5em;
+}
+
+[type="button"]:hover {
+    background-color: var(--fg-2nd-color);
+}
+
+[type="button"]:active {
+    background-color: var(--bg-color);
+    color: var(--fg-color);
 }
