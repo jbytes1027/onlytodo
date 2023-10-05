@@ -13,7 +13,6 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-
 DotNetEnv.Env.TraversePath().Load();
 builder.Configuration.AddEnvironmentVariables();
 
@@ -24,7 +23,9 @@ builder.Services.AddScoped<TaskService>();
 
 var app = builder.Build();
 app.UseCors();
+app.UseStaticFiles();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();
 
