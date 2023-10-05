@@ -13,11 +13,11 @@
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "http-proxy-middleware": "^2.0.6"
+    "react-scripts": "^5.0.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "REACT_APP_BACKEND_URL=http://localhost:5190 react-scripts start",
