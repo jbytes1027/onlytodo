@@ -18,8 +18,8 @@
     "prettier": "^3.0.3"
   },
   "scripts": {
-    "start": "REACT_APP_BACKEND_URL=//localhost:5190 react-scripts start",
-    "build": "REACT_APP_BACKEND_URL=//onlytodo.azurewebsites.net react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "npx prettier --ignore-path=.gitignore --log-level=warn --check . && npx eslint --ignore-path=.gitignore . && echo 'Check Complete.'",
