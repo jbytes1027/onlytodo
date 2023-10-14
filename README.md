@@ -1,1 +1,16 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/xhlg1JLx)
+## OnlyTodo
+
+Yet another todo app website.
+
+### Tech
+
+-   Front end
+    -   [React](https://react.dev/) via [Create React App](https://create-react-app.dev/) for UI
+    -   [npm](https://www.npmjs.com/) for package management
+    -   [ESLint](https://github.com/eslint/eslint) for linting
+    -   [Prettier](https://github.com/prettier/prettier) for formatting
+-   Back end
+    -   [ASP.NET](https://asp.net) for the back end framework
+    -   [xUnit.net](https://xunit.net/) for testing
+    -   [PostgreSQL](https://www.postgresql.org/) for the database
+-   Azure for deployment
