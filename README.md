@@ -2,6 +2,8 @@
 
 Yet another todo app website.
 
+[Video Walkthrough](https://youtu.be/5GAqKT4kDMw)
+
 ### Tech
 
 -   Front end
