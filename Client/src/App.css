@@ -1,0 +1,88 @@
+:root {
+  --bg-color: black;
+  --fg-2nd-color: #c7c7c7;
+  --fg-color: white;
+  --outline-thickness: 2px;
+}
+
+body {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 1.2em;
+  color: var(--bg-color);
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-list-item {
+  margin: 0.3em 0;
+  padding: 0.1em;
+  display: flex;
+  flex-direction: row;
+  outline: solid var(--outline-thickness) var(--bg-color);
+}
+
+.todo-list-item .button-edit,
+.todo-list-item .button-delete {
+  margin: 0.05em 0.2em;
+  font-size: x-large;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todo-list-item .checkbox {
+  margin: 0.3em;
+  width: 1em;
+  height: 1em;
+  outline: solid var(--outline-thickness) var(--bg-color);
+  outline-offset: calc(-1 * var(--outline-thickness));
+}
+
+.todo-list-item .title {
+  text-align: left;
+  margin-right: auto;
+  margin: auto auto auto 0;
+  padding: 0.3em;
+}
+
+.todo-list-item [type="text"] {
+  outline: none;
+}
+
+.add-todo {
+  display: flex;
+  margin: 0.3em 0;
+}
+
+[type="button"],
+[type="text"] {
+  border: 0px;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+
+  padding: 0.3em;
+  background-color: var(--fg-color);
+  outline: solid var(--outline-thickness) var(--bg-color);
+  color: var(--bg-color);
+}
+
+[type="text"] {
+  width: 100%;
+}
+
+[type="button"] {
+  margin-left: 0.5em;
+}
+
+[type="button"]:hover {
+  background-color: var(--fg-2nd-color);
+}
+
+[type="button"]:active {
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+}
