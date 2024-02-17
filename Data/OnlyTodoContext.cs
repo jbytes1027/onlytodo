@@ -7,11 +7,13 @@ public partial class OnlyTodoContext : DbContext
 {
     public OnlyTodoContext()
     {
+        Tasks = Set<TodoTask>();
     }
 
     public OnlyTodoContext(DbContextOptions<OnlyTodoContext> options)
         : base(options)
     {
+        Tasks = Set<TodoTask>();
     }
 
     public virtual DbSet<TaskSchema> Tasks { get; set; }
