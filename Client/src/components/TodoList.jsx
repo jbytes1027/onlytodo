@@ -20,7 +20,6 @@ const TodoList = () => {
     return () => clearInterval(interval)
   }, [])
 
-
   return (
     <div className="todo-list">
       {list.map((e) => (
@@ -67,6 +66,7 @@ const TodoItem = (props) => {
 
     setIsEditMode(false)
   }
+
   if (isEditMode)
     return (
       <div className="todo-list-item">
