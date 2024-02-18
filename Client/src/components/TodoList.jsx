@@ -9,7 +9,7 @@ const TodoList = () => {
     taskService
       .getAll()
       .then((res) => setList(res))
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
   }
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const TodoItem = (props) => {
       await taskService.remove(props.id)
       props.onChange()
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -61,7 +61,7 @@ const TodoItem = (props) => {
         props.onChange()
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
 
     setIsEditMode(false)

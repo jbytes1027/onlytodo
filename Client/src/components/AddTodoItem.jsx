@@ -20,7 +20,7 @@ function AddTodoItem(props) {
       setInputText("")
       props.onSubmit()
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
     setIsLoading(false)
   }
