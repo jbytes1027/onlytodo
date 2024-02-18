@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react"
-import taskService from "../services/TaskService"
+import TaskService from "../services/TaskService"
 import AddTodoItem from "./AddTodoItem"
 
 const TodoList = () => {
   const [list, setList] = useState([])
 
   function updateList() {
-    taskService
-      .getAll()
+    TaskService.getAll()
       .then((res) => setList(res))
       .catch((err) => console.error(err))
   }
@@ -42,7 +41,7 @@ const TodoItem = (props) => {
 
   async function onDeleteTodo() {
     try {
-      await taskService.remove(props.id)
+      await TaskService.remove(props.id)
       props.onChange()
     } catch (err) {
       console.error(err)
@@ -57,7 +56,7 @@ const TodoItem = (props) => {
   async function tryUpdateTodo() {
     try {
       if (newTitle !== props.title) {
-        await taskService.update(props.id, newTitle)
+        await TaskService.update(props.id, newTitle)
         props.onChange()
       }
     } catch (err) {
