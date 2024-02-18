@@ -16,11 +16,11 @@ public partial class OnlyTodoContext : DbContext
         Tasks = Set<TodoTask>();
     }
 
-    public virtual DbSet<TaskSchema> Tasks { get; set; }
+    public virtual DbSet<TodoTask> Tasks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TaskSchema>(entity =>
+        modelBuilder.Entity<TodoTask>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("tasks_pkey");
 

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlyTodo.Data;
 using OnlyTodo.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 {
@@ -16,12 +16,21 @@ builder.Services.AddEndpointsApiExplorer();
 DotNetEnv.Env.TraversePath().Load();
 builder.Configuration.AddEnvironmentVariables();
 
-string? connectionString = builder.Configuration["CONNECTION_STRING"];
-if (connectionString is null) throw new Exception("No Connection String Found");
-builder.Services.AddDbContext<OnlyTodoContext>(options => options.UseNpgsql(connectionString));
+if (builder.Environment.EnvironmentName.Equals("Testing"))
+{
+    builder.Services.AddDbContext<OnlyTodoContext>(options => options.UseInMemoryDatabase("TestingDb"));
+}
+else
+{
+    string connectionString = builder.Configuration["CONNECTION_STRING"]
+        ?? throw new Exception("No Connection String Found");
+
+    builder.Services.AddDbContext<OnlyTodoContext>(options => options.UseNpgsql(connectionString));
+}
+
 builder.Services.AddScoped<TaskService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 app.UseCors();
 app.UseStaticFiles();
 app.MapControllers();
@@ -29,4 +38,5 @@ app.MapFallbackToFile("index.html");
 
 app.Run();
 
+// Exposes class to testing
 public partial class Program { }

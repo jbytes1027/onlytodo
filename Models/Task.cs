@@ -1,25 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿namespace OnlyTodo.Models;
 
-namespace OnlyTodo.Models;
-
-public record Task
+public record TodoTaskDTO
 {
-    [BindNever]
     public Guid? Id { get; set; }
     public string? Title { get; set; }
     public bool? Completed { get; set; }
 }
 
-public record TaskSchema
+public record TodoTask
 {
-    public TaskSchema(Guid id, string title, bool completed = false)
+    public TodoTask(Guid id, string title, bool completed = false)
     {
         Id = id;
         Title = title;
         Completed = completed;
     }
 
-    [BindNever]
     public Guid Id { get; set; }
     public string Title { get; set; }
     public bool Completed { get; set; }

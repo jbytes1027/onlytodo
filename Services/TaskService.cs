@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OnlyTodo.Data;
 using OnlyTodo.Models;
-using TodoTask = OnlyTodo.Models.Task;
-using Task = System.Threading.Tasks.Task;
 
 namespace OnlyTodo.Services;
 
@@ -15,63 +13,42 @@ public class TaskService
         _context = context;
     }
 
-    public Task<List<TaskSchema>> GetAllAsync()
+    public Task<List<TodoTask>> GetAllAsync()
     {
         return _context.Tasks.ToListAsync();
     }
 
-    public Task<TaskSchema?> FindAsync(Guid id)
+    public async Task<TodoTask?> FindAsync(Guid id)
     {
-        var query = from task in _context.Tasks where task.Id == id select task;
-        query.DefaultIfEmpty(null);
-        return query.FirstOrDefaultAsync();
+        return await _context.Tasks.FindAsync(id);
     }
 
-    public Task<TaskSchema?> AddAsync(TodoTask task)
+    public async Task<TodoTask> AddAsync(TodoTask task)
     {
-        TaskSchema? taskToAdd = null;
+        // Don't trust the given guid
+        task = new TodoTask(Guid.NewGuid(), task.Title, task.Completed);
 
-        if (task.Title is not null && task.Completed is not null)
-        {
-            taskToAdd = new TaskSchema(Guid.NewGuid(), task.Title, (bool)task.Completed);
-            _context.Add(taskToAdd);
-            _context.SaveChanges();
-        }
+        _context.Add(task);
+        await _context.SaveChangesAsync();
 
-        return Task.FromResult(taskToAdd);
+        return task;
     }
 
-    public Task<TaskSchema?> UpdateAsync(TodoTask taskUpdates)
+    public async Task<TodoTask> UpdateAsync(TodoTask taskUpdates)
     {
-        _context.Tasks.DefaultIfEmpty(null);
-        var entity = _context.Tasks.FirstOrDefault(t => t != null && t.Id == taskUpdates.Id);
+        TodoTask task = _context.Tasks.Find(taskUpdates.Id) ?? throw new Exception();
 
-        if (entity is not null)
-        {
-            if (taskUpdates.Title is not null)
-                entity.Title = taskUpdates.Title;
-            if (taskUpdates.Completed is not null)
-                entity.Completed = (bool)taskUpdates.Completed;
+        _context.Update(task);
+        await _context.SaveChangesAsync();
 
-            _context.Update(entity);
-            _context.SaveChanges();
-        }
-
-        return Task.FromResult(entity);
+        return task;
     }
 
-    public Task<TaskSchema?> RemoveAsync(Guid id)
+    public async Task RemoveAsync(Guid id)
     {
-        var query = from t in _context.Tasks where t.Id == id select t;
-        query.DefaultIfEmpty(null);
-        TaskSchema? task = query.FirstOrDefault();
+        TodoTask task = _context.Tasks.Find(id) ?? throw new NullReferenceException();
 
-        if (task is not null)
-        {
-            _context.Remove(task);
-            _context.SaveChanges();
-        }
-
-        return Task.FromResult(task);
+        _context.Remove(task);
+        await _context.SaveChangesAsync();
     }
 }

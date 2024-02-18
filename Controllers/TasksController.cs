@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using TodoTask = OnlyTodo.Models.Task;
-using OnlyTodo.Services;
 using OnlyTodo.Models;
+using OnlyTodo.Services;
+using OnlyTodo.Helpers;
 
 namespace OnlyTodo.Controllers;
 
@@ -9,7 +9,7 @@ namespace OnlyTodo.Controllers;
 [Route("[controller]")]
 public class TasksController : ControllerBase
 {
-    readonly TaskService _taskService;
+    private readonly TaskService _taskService;
 
     public TasksController(TaskService taskService)
     {
@@ -17,16 +17,27 @@ public class TasksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<TaskSchema>>> GetAll()
+    public async Task<ActionResult<List<TodoTaskDTO>>> GetAll()
     {
-        return await _taskService.GetAllAsync();
+        List<TodoTask> tasks = await _taskService.GetAllAsync();
+
+        try
+        {
+            IEnumerable<TodoTaskDTO> taskDTOs = tasks.Select(t => t.ToDTO());
+            return Ok(taskDTOs);
+        }
+        catch
+        {
+            return Problem();
+        }
     }
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<ActionResult<TaskSchema>> Get(Guid id)
+    public async Task<ActionResult<TodoTaskDTO>> Get(Guid id)
     {
-        var task = await _taskService.FindAsync(id);
+        TodoTask? task = await _taskService.FindAsync(id);
+
         if (task is null)
             return NotFound();
 
@@ -34,9 +45,14 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TaskSchema>> Create(TodoTask task)
+    public async Task<ActionResult<Task>> Create(TodoTaskDTO dto)
     {
-        TaskSchema? createdTask = await _taskService.AddAsync(task);
+        if (dto.Title is null)
+            return UnprocessableEntity();
+
+        TodoTask parsedTask = new(new Guid(), dto.Title, dto?.Completed ?? false);
+
+        TodoTask createdTask = await _taskService.AddAsync(parsedTask);
 
         if (createdTask is null)
             return BadRequest();
@@ -46,24 +62,35 @@ public class TasksController : ControllerBase
 
     [HttpPatch]
     [Route("{id}")]
-    public async Task<ActionResult<TaskSchema>> Update([FromRoute] Guid id, TodoTask taskUpdates)
+    public async Task<ActionResult<Task>> Update([FromRoute] Guid id, TodoTaskDTO taskUpdates)
     {
-        taskUpdates.Id = id;
+        TodoTask? ogTask = await _taskService.FindAsync(id);
 
-        var updatedTask = await _taskService.UpdateAsync(taskUpdates);
-        if (updatedTask is null)
+        if (ogTask is null)
             return NotFound();
+
+        if (taskUpdates.Title is not null)
+            ogTask.Title = taskUpdates.Title;
+        if (taskUpdates.Completed is not null)
+            ogTask.Completed = (bool)taskUpdates.Completed;
+
+        TodoTask updatedTask = await _taskService.UpdateAsync(ogTask);
 
         return Ok(updatedTask);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public async Task<ActionResult<TaskSchema>> Remove(Guid id)
+    public async Task<ActionResult> Remove(Guid id)
     {
-        var task = await _taskService.RemoveAsync(id);
-        if (task is null)
+        try
+        {
+            await _taskService.RemoveAsync(id);
+        }
+        catch
+        {
             return NotFound();
+        }
 
         return NoContent();
     }

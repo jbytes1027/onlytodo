@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using OnlyTodo.Data;
-using OnlyTodo.Services;
 
 namespace OnlyTodo.Tests;
 
-public class CustomWebApplicationFactory<TProgram>
+public class TestingWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
