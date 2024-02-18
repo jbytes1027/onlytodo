@@ -16,15 +16,14 @@ builder.Services.AddEndpointsApiExplorer();
 DotNetEnv.Env.TraversePath().Load();
 builder.Configuration.AddEnvironmentVariables();
 
-if (builder.Environment.EnvironmentName.Equals("Testing"))
+string? connectionString = builder.Configuration["CONNECTION_STRING"];
+
+if (builder.Environment.EnvironmentName.Equals("Testing") || connectionString is null)
 {
     builder.Services.AddDbContext<OnlyTodoContext>(options => options.UseInMemoryDatabase("TestingDb"));
 }
 else
 {
-    string connectionString = builder.Configuration["CONNECTION_STRING"]
-        ?? throw new Exception("No Connection String Found");
-
     builder.Services.AddDbContext<OnlyTodoContext>(options => options.UseNpgsql(connectionString));
 }
 
