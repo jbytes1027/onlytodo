@@ -1,10 +1,10 @@
-## OnlyTodo
+# OnlyTodo
 
 Yet another todo app website.
 
 [Video Walkthrough](https://youtu.be/5GAqKT4kDMw)
 
-### Tech
+## Tech
 
 - Front end
   - [React](https://react.dev/) via [Create React App](https://create-react-app.dev/) for UI
@@ -16,3 +16,11 @@ Yet another todo app website.
   - [xUnit.net](https://xunit.net/) for testing
   - [PostgreSQL](https://www.postgresql.org/) for the database
 - Azure for deployment
+
+## Running Locally
+
+Create `Client/.env` and add following
+
+    REACT_APP_BACKEND_URL=http://localhost:5190
+
+Run `dotnet run`
