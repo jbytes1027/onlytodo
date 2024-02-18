@@ -1,6 +1,6 @@
 # OnlyTodo
 
-Yet another todo app website.
+Yet another todo app website. Built to learn react and ASP.NET basics.
 
 [Video Walkthrough](https://youtu.be/5GAqKT4kDMw)
 
