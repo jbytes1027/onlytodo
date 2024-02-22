@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\onlytodo-server.csproj" />
+    <ProjectReference Include="..\onlytodo-api.csproj" />
   </ItemGroup>
 
 </Project>
