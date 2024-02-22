@@ -31,9 +31,7 @@ builder.Services.AddScoped<TaskService>();
 
 WebApplication app = builder.Build();
 app.UseCors();
-app.UseStaticFiles();
 app.MapControllers();
-app.MapFallbackToFile("index.html");
 
 app.Run();
 
