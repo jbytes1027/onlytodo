@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - api/**
+      - .github/workflows/master_onlytodo-api.yml
   workflow_dispatch:
 
 jobs:
