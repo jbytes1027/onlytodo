@@ -14,8 +14,8 @@ const TodoList = () => {
   useEffect(() => {
     updateList()
 
-    // auto update every 3 seconds
-    const interval = setInterval(updateList, 3000)
+    // Auto update every 5 seconds
+    const interval = setInterval(updateList, 5000)
     return () => clearInterval(interval)
   }, [])
 
